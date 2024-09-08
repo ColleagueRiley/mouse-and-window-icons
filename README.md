@@ -5,7 +5,7 @@
 ```c
 int longCount = 2 + a.w * a.h;
 
-unsigned long* X11Icon = (u64*) malloc(longCount * sizeof(u64));
+unsigned long* X11Icon = (unsigned long*) malloc(longCount * sizeof(unsigned long));
 unsigned long* target = X11Icon;
 
 *target++ = a.w;
