@@ -6,7 +6,6 @@
 i32 longCount = 2 + a.w * a.h;
 
 u64* X11Icon = (u64*) malloc(longCount * sizeof(u64));
-
 u64* target = X11Icon;
 
 *target++ = a.w;
@@ -32,9 +31,7 @@ for (i = 0; i < a.w * a.h; i++) {
 ```
 
 ```c
-static Atom NET_WM_ICON = 0;
-if (NET_WM_ICON == 0)
-    NET_WM_ICON = XInternAtom((Display*) display, "_NET_WM_ICON", False);
+const Atom NET_WM_ICON = XInternAtom((Display*) display, "_NET_WM_ICON", False);
 
 XChangeProperty((Display*) display, (Window) window,
     NET_WM_ICON,
@@ -46,7 +43,6 @@ XChangeProperty((Display*) display, (Window) window,
 
 ```c
 free(X11Icon);
-
 XFlush((Display*) display);
 ```
 
