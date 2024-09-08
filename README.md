@@ -6,13 +6,12 @@
 i32 longCount = 2 + a.w * a.h;
 
 u64* X11Icon = (u64*) malloc(longCount * sizeof(u64));
-```
 
-```c
 u64* target = X11Icon;
 
 *target++ = a.w;
 *target++ = a.h;
+```
 
 ```c
 u32 i;
@@ -55,6 +54,7 @@ XFlush((Display*) display);
 
 ```c
 HICON handle = loadHandleImage(src, a, TRUE);
+```
 
 ```c
 SetClassLongPtrA(window, GCLP_HICON, (LPARAM) handle);
@@ -189,6 +189,7 @@ HICON loadHandleImage(u8* src, RGFW_area a, BOOL icon) {
     ii.yHotspot = 0;
     ii.hbmMask = mask;
     ii.hbmColor = color;
+```
 
 ```c
     handle = CreateIconIndirect(&ii);
