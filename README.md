@@ -3,17 +3,17 @@
 
 ### X11
 ```c
-i32 longCount = 2 + a.w * a.h;
+int longCount = 2 + a.w * a.h;
 
-u64* X11Icon = (u64*) malloc(longCount * sizeof(u64));
-u64* target = X11Icon;
+unsigned long* X11Icon = (u64*) malloc(longCount * sizeof(u64));
+unsigned long* target = X11Icon;
 
 *target++ = a.w;
 *target++ = a.h;
 ```
 
 ```c
-u32 i;
+unsigned int i;
 
 for (i = 0; i < a.w * a.h; i++) {
     if (channels == 3)
@@ -37,7 +37,7 @@ XChangeProperty((Display*) display, (Window) window,
     NET_WM_ICON,
     6, 32,
     PropModeReplace,
-    (u8*) X11Icon,
+    (unsigned char*) X11Icon,
     longCount);
 ```
 
@@ -98,14 +98,14 @@ native->yhot = 0;
 ```
 
 ```c
-u8* source = (u8*) image;
+unsigned char* source = (unsigned char*) image;
 XcursorPixel* target = native->pixels;
 ```
 
 ```c
-u32 i;
+unsigned int i;
 for (i = 0; i < a.w * a.h; i++, target++, source += 4) {
-    u8 alpha = 0xFF;
+    unsigned char alpha = 0xFF;
     if (channels == 4)
         alpha = source[3];
 
@@ -129,15 +129,15 @@ XcursorImageDestroy(native);
 ### win32
 
 ```c
-HICON loadHandleImage(u8* src, RGFW_area a, BOOL icon) {
-    u32 i;
+HICON loadHandleImage(unsigned char* src, RGFW_area a, BOOL icon) {
+    unsigned int i;
     HDC dc;
     HICON handle;
     HBITMAP color, mask;
     BITMAPV5HEADER bi;
     ICONINFO ii;
-    u8* target = NULL;
-    u8* source = src;
+    unsigned char* target = NULL;
+    unsigned char* source = src;
 
     ZeroMemory(&bi, sizeof(bi));
     bi.bV5Size = sizeof(bi);
