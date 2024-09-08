@@ -218,7 +218,7 @@ SetCursor(LoadCursorA(NULL, icon));
 
 ### cocoa
 
-```
+```c
 if (stdMouses > ((sizeof(RGFW_mouseIconSrc)) / (sizeof(char*))))
     return;
 
