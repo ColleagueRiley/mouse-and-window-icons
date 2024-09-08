@@ -6,11 +6,15 @@
 i32 longCount = 2 + a.w * a.h;
 
 u64* X11Icon = (u64*) malloc(longCount * sizeof(u64));
+```
+
+```c
 u64* target = X11Icon;
 
 *target++ = a.w;
 *target++ = a.h;
 
+```c
 u32 i;
 
 for (i = 0; i < a.w * a.h; i++) {
@@ -26,7 +30,9 @@ for (i = 0; i < a.w * a.h; i++) {
         ((icon[i * 4 + 2]) << 0) |
         ((icon[i * 4 + 3]) << 24);
 }
+```
 
+```c
 static Atom NET_WM_ICON = 0;
 if (NET_WM_ICON == 0)
     NET_WM_ICON = XInternAtom((Display*) display, "_NET_WM_ICON", False);
@@ -37,7 +43,9 @@ XChangeProperty((Display*) display, (Window) window,
     PropModeReplace,
     (u8*) X11Icon,
     longCount);
+```
 
+```c
 free(X11Icon);
 
 XFlush((Display*) display);
@@ -48,26 +56,36 @@ XFlush((Display*) display);
 ```c
 HICON handle = loadHandleImage(src, a, TRUE);
 
+```c
 SetClassLongPtrA(window, GCLP_HICON, (LPARAM) handle);
+```
 
+```c
 DestroyIcon(handle);
 ```
 
 ### cocoa
 
+Make a bitmap representation, then copy the loaded image into it.
 ```c
-/* code by EimaMei  */
-// Make a bitmap representation, then copy the loaded image into it.
 void* representation = NSBitmapImageRep_initWithBitmapData(NULL, area.w, area.h, 8, channels, (channels == 4), false, "NSCalibratedRGBColorSpace", 1 << 1, area.w * channels, 8 * channels);
 memcpy(NSBitmapImageRep_bitmapData(representation), data, area.w * area.h * channels);
+```
 
-// Add ze representation.
+Add the representation.
+```c
 void* dock_image = NSImage_initWithSize((NSSize){area.w, area.h});
 NSImage_addRepresentation(dock_image, (void*) representation);
+```
 
-// Finally, set the dock image to it.
+Finally, set the dock image to it.
+
+```c
 objc_msgSend_void_id(NSApp, sel_registerName("setApplicationIconImage:"), dock_image);
-// Free the garbage.
+```
+
+Free the garbage.
+```c
 release(dock_image);
 release(representation);
 ```
@@ -81,10 +99,14 @@ release(representation);
 XcursorImage* native = XcursorImageCreate(a.w, a.h);
 native->xhot = 0;
 native->yhot = 0;
+```
 
+```c
 u8* source = (u8*) image;
 XcursorPixel* target = native->pixels;
+```
 
+```c
 u32 i;
 for (i = 0; i < a.w * a.h; i++, target++, source += 4) {
     u8 alpha = 0xFF;
@@ -93,10 +115,17 @@ for (i = 0; i < a.w * a.h; i++, target++, source += 4) {
 
     *target = (alpha << 24) | (((source[0] * alpha) / 255) << 16) | (((source[1] * alpha) / 255) << 8) | (((source[2] * alpha) / 255) << 0);
 }
+```
 
+```c
 Cursor cursor = XcursorImageLoadCursor((Display*) display, native);
-XDefineCursor((Display*) display, (Window) window, (Cursor) cursor);
+```
 
+```c
+XDefineCursor((Display*) display, (Window) window, (Cursor) cursor);
+```
+
+```c
 XFreeCursor((Display*) display, (Cursor) cursor);
 XcursorImageDestroy(native);
 ```
@@ -136,9 +165,13 @@ HICON loadHandleImage(u8* src, RGFW_area a, BOOL icon) {
         NULL,
         (DWORD) 0);
     ReleaseDC(NULL, dc);
+```
 
+```c
     mask = CreateBitmap(a.w, a.h, 1, 1, NULL);
+```
 
+```c
     for (i = 0; i < a.w * a.h; i++) {
         target[0] = source[2];
         target[1] = source[1];
@@ -147,7 +180,9 @@ HICON loadHandleImage(u8* src, RGFW_area a, BOOL icon) {
         target += 4;
         source += 4;
     }
+```
 
+```c
     ZeroMemory(&ii, sizeof(ii));
     ii.fIcon = icon;
     ii.xHotspot = 0;
@@ -155,8 +190,11 @@ HICON loadHandleImage(u8* src, RGFW_area a, BOOL icon) {
     ii.hbmMask = mask;
     ii.hbmColor = color;
 
+```c
     handle = CreateIconIndirect(&ii);
+```
 
+```c
     DeleteObject(color);
     DeleteObject(mask);
 
@@ -166,34 +204,42 @@ HICON loadHandleImage(u8* src, RGFW_area a, BOOL icon) {
 
 ```c
 HCURSOR cursor = (HCURSOR) loadHandleImage(image, a, FALSE);
+```
+
+```c
 SetClassLongPtrA(window, GCLP_HCURSOR, (LPARAM) cursor);
 SetCursor(cursor);
+```
+
+```c
 DestroyCursor(cursor);
 ```
 
 ### cocoa
 
+Make a bitmap representation, then copy the loaded image into it.
 ```c
-if (image == NULL) {
-    objc_msgSend_void(NSCursor_arrowStr("arrowCursor"), sel_registerName("set"));
-    return;
-}
-
-/* NOTE(EimaMei): Code by yours truly. */
-// Make a bitmap representation, then copy the loaded image into it.
 void* representation = NSBitmapImageRep_initWithBitmapData(NULL, a.w, a.h, 8, channels, (channels == 4), false, "NSCalibratedRGBColorSpace", 1 << 1, a.w * channels, 8 * channels);
 memcpy(NSBitmapImageRep_bitmapData(representation), image, a.w * a.h * channels);
+```
 
-// Add ze representation.
+Add the representation.
+```c
 void* cursor_image = NSImage_initWithSize((NSSize){a.w, a.h});
 NSImage_addRepresentation(cursor_image, representation);
+```
 
-// Finally, set the cursor image.
+Finally, set the cursor image.
+
+```c
 void* cursor = NSCursor_initWithImage(cursor_image, (NSPoint){0.0, 0.0});
 
 objc_msgSend_void(cursor, sel_registerName("set"));
+```
 
-// Free the garbage.
+Free the garbage.
+
+```c
 release(cursor_image);
 release(representation);
 ```
@@ -202,8 +248,13 @@ release(representation);
 ### X11
 ```c
 Cursor cursor = XCreateFontCursor((Display*) display, mouse);
-XDefineCursor((Display*) display, (Window) window, (Cursor) cursor);
+```
 
+```c
+XDefineCursor((Display*) display, (Window) window, (Cursor) cursor);
+```
+
+```c
 XFreeCursor((Display*) display, (Cursor) cursor);
 ```
 
@@ -211,7 +262,9 @@ XFreeCursor((Display*) display, (Cursor) cursor);
 
 ```c
 char* icon = MAKEINTRESOURCEA(mouse);
+```
 
+```c
 SetClassLongPtrA(window, GCLP_HCURSOR, (LPARAM) LoadCursorA(NULL, icon));
 SetCursor(LoadCursorA(NULL, icon));
 ```
@@ -219,16 +272,9 @@ SetCursor(LoadCursorA(NULL, icon));
 ### cocoa
 
 ```c
-if (stdMouses > ((sizeof(RGFW_mouseIconSrc)) / (sizeof(char*))))
-    return;
-
-char* mouseStr = RGFW_mouseIconSrc[stdMouses];
 void* mouse = NSCursor_arrowStr(mouseStr);
+```
 
-if (mouse == NULL)
-    return;
-
-RGFW_UNUSED(win);
-CGDisplayShowCursor(kCGDirectMainDisplay);
+```c
 objc_msgSend_void(mouse, sel_registerName("set"));
 ```	
