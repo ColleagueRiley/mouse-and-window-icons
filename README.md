@@ -167,9 +167,9 @@ memcpy(NSBitmapImageRep_bitmapData(representation), data, width * height * chann
 
 Add the representation.
 
-[NSImage_init](https://developer.apple.com/documentation/appkit/nsimage/1519860-init)
+[`NSImage_init`](https://developer.apple.com/documentation/appkit/nsimage/1519860-init)
 
-[addRepresentation](https://developer.apple.com/documentation/appkit/nsimage/1519911-addrepresentation)
+[`addRepresentation`](https://developer.apple.com/documentation/appkit/nsimage/1519911-addrepresentation)
 
 ```c
 void* dock_image = NSImage_initWithSize((NSSize){width, height});
@@ -178,7 +178,7 @@ NSImage_addRepresentation(dock_image, (void*) representation);
 
 Finally, set the dock image to it.
 
-[setApplicationIconImage](https://developer.apple.com/documentation/appkit/nsapplication/1428744-applicationiconimage)
+[`setApplicationIconImage`](https://developer.apple.com/documentation/appkit/nsapplication/1428744-applicationiconimage)
 
 ```c
 objc_msgSend_void_id(NSApp, sel_registerName("setApplicationIconImage:"), dock_image);
@@ -195,6 +195,7 @@ release(representation);
 ## mouse icon image
 
 ### X11
+[`XcursorImageCreate`](https://linux.die.net/man/3/xcursorimagecreate)
 ```c
 XcursorImage* native = XcursorImageCreate(width, height);
 native->xhot = 0;
@@ -215,13 +216,20 @@ for (i = 0; i < width * height; i++, target++, source += 4) {
 }
 ```
 
+[`XcursorImageLoadCursor`](https://man.archlinux.org/man/XcursorImageLoadCursor.3.en)
+
 ```c
 Cursor cursor = XcursorImageLoadCursor((Display*) display, native);
 ```
 
+[`XDefineCursor`](https://www.x.org/releases/X11R7.5/doc/man/man3/XDefineCursor.3.html)
+
 ```c
 XDefineCursor((Display*) display, (Window) window, (Cursor) cursor);
 ```
+
+[`XFreeCursor`](https://linux.die.net/man/3/xfreecursor)
+[`XcursorImageDestroy`](https://linux.die.net/man/3/xcursorimagedestroy)
 
 ```c
 XFreeCursor((Display*) display, (Cursor) cursor);
@@ -234,10 +242,15 @@ XcursorImageDestroy(native);
 HCURSOR cursor = (HCURSOR) loadHandleImage(image, a, FALSE);
 ```
 
+[`SetClassLongPtrA`](https://learn.microsoft.com/en-us/windows/win32/api/winuser/nf-winuser-setclasslongptra)
+[`SetCursor`](https://learn.microsoft.com/en-us/windows/win32/api/winuser/nf-winuser-setcursor)
+
 ```c
 SetClassLongPtrA(window, GCLP_HCURSOR, (LPARAM) cursor);
 SetCursor(cursor);
 ```
+
+[`DestroyCursor`](https://learn.microsoft.com/en-us/windows/win32/api/winuser/nf-winuser-destroycursor)
 
 ```c
 DestroyCursor(cursor);
