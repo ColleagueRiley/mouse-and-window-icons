@@ -3,19 +3,19 @@
 
 ### X11
 ```c
-int longCount = 2 + a.w * a.h;
+int longCount = 2 + width * height;
 
 unsigned long* X11Icon = (unsigned long*) malloc(longCount * sizeof(unsigned long));
 unsigned long* target = X11Icon;
 
-*target++ = a.w;
-*target++ = a.h;
+*target++ = width;
+*target++ = height;
 ```
 
 ```c
 unsigned int i;
 
-for (i = 0; i < a.w * a.h; i++) {
+for (i = 0; i < width * height; i++) {
     if (channels == 3)
         *target++ = ((icon[i * 3 + 0]) << 16) |
         ((icon[i * 3 + 1]) << 8) |
@@ -64,13 +64,13 @@ DestroyIcon(handle);
 
 Make a bitmap representation, then copy the loaded image into it.
 ```c
-void* representation = NSBitmapImageRep_initWithBitmapData(NULL, area.w, area.h, 8, channels, (channels == 4), false, "NSCalibratedRGBColorSpace", 1 << 1, area.w * channels, 8 * channels);
-memcpy(NSBitmapImageRep_bitmapData(representation), data, area.w * area.h * channels);
+void* representation = NSBitmapImageRep_initWithBitmapData(NULL, width, height, 8, channels, (channels == 4), false, "NSCalibratedRGBColorSpace", 1 << 1, width * channels, 8 * channels);
+memcpy(NSBitmapImageRep_bitmapData(representation), data, width * height * channels);
 ```
 
 Add the representation.
 ```c
-void* dock_image = NSImage_initWithSize((NSSize){area.w, area.h});
+void* dock_image = NSImage_initWithSize((NSSize){width, height});
 NSImage_addRepresentation(dock_image, (void*) representation);
 ```
 
@@ -92,7 +92,7 @@ release(representation);
 
 ### X11
 ```c
-XcursorImage* native = XcursorImageCreate(a.w, a.h);
+XcursorImage* native = XcursorImageCreate(width, height);
 native->xhot = 0;
 native->yhot = 0;
 ```
@@ -104,7 +104,7 @@ XcursorPixel* target = native->pixels;
 
 ```c
 unsigned int i;
-for (i = 0; i < a.w * a.h; i++, target++, source += 4) {
+for (i = 0; i < width * height; i++, target++, source += 4) {
     unsigned char alpha = 0xFF;
     if (channels == 4)
         alpha = source[3];
@@ -141,8 +141,8 @@ HICON loadHandleImage(unsigned char* src, RGFW_area a, BOOL icon) {
 
     ZeroMemory(&bi, sizeof(bi));
     bi.bV5Size = sizeof(bi);
-    bi.bV5Width = a.w;
-    bi.bV5Height = -((LONG) a.h);
+    bi.bV5Width = width;
+    bi.bV5Height = -((LONG) height);
     bi.bV5Planes = 1;
     bi.bV5BitCount = 32;
     bi.bV5Compression = BI_BITFIELDS;
@@ -164,11 +164,11 @@ HICON loadHandleImage(unsigned char* src, RGFW_area a, BOOL icon) {
 ```
 
 ```c
-    mask = CreateBitmap(a.w, a.h, 1, 1, NULL);
+    mask = CreateBitmap(width, height, 1, 1, NULL);
 ```
 
 ```c
-    for (i = 0; i < a.w * a.h; i++) {
+    for (i = 0; i < width * height; i++) {
         target[0] = source[2];
         target[1] = source[1];
         target[2] = source[0];
@@ -216,13 +216,13 @@ DestroyCursor(cursor);
 
 Make a bitmap representation, then copy the loaded image into it.
 ```c
-void* representation = NSBitmapImageRep_initWithBitmapData(NULL, a.w, a.h, 8, channels, (channels == 4), false, "NSCalibratedRGBColorSpace", 1 << 1, a.w * channels, 8 * channels);
-memcpy(NSBitmapImageRep_bitmapData(representation), image, a.w * a.h * channels);
+void* representation = NSBitmapImageRep_initWithBitmapData(NULL, width, height, 8, channels, (channels == 4), false, "NSCalibratedRGBColorSpace", 1 << 1, width * channels, 8 * channels);
+memcpy(NSBitmapImageRep_bitmapData(representation), image, width * height * channels);
 ```
 
 Add the representation.
 ```c
-void* cursor_image = NSImage_initWithSize((NSSize){a.w, a.h});
+void* cursor_image = NSImage_initWithSize((NSSize){width, height});
 NSImage_addRepresentation(cursor_image, representation);
 ```
 
