@@ -16,9 +16,9 @@ unsigned long* target = X11Icon;
 unsigned int i;
 
 for (i = 0; i < width * height; i++) {
-    *target++ = ((icon[i * 4 + 1]) << 8) // g
-                ((icon[i * 4 + 0]) << 16) // b
-                ((icon[i * 4 + 2])) // r
+    *target++ = ((icon[i * 4 + 2])) // b
+                ((icon[i * 4 + 1]) << 8) // g
+                ((icon[i * 4 + 0]) << 16) // r
                 ((icon[i * 4 + 3]) << 24); // a 
 }
 ```
