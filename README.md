@@ -312,7 +312,7 @@ Cursor cursor = XCreateFontCursor((Display*) display, mouse);
 XDefineCursor((Display*) display, (Window) window, (Cursor) cursor);
 ```
 
-[`XFreeCursor`]()https://tronche.com/gui/x/xlib/pixmap-and-cursor/XFreeCursor.html
+[`XFreeCursor`](https://tronche.com/gui/x/xlib/pixmap-and-cursor/XFreeCursor.html)
 
 ```c
 XFreeCursor((Display*) display, (Cursor) cursor);
