@@ -5,7 +5,7 @@
 2) mouse image icons
 3) default mouse icons
 
-## window icons
+## Window icons
 
 ### X11
 ```c
