@@ -54,7 +54,7 @@ XFlush((Display*) display);
 ### win32
 
 ```c
-HICON loadHandleImage(unsigned char* src, RGFW_area a, BOOL icon) {
+HICON loadHandleImage(unsigned char* src, unsigned int width, unsigned int height, BOOL icon) {
 ``` 
 
 [`BITMAPV5HEADER`](https://learn.microsoft.com/en-us/windows/win32/api/wingdi/ns-wingdi-bitmapv5header) stucture
@@ -143,13 +143,13 @@ HICON loadHandleImage(unsigned char* src, RGFW_area a, BOOL icon) {
 Now you can create a handle via the function we created. 
 
 ```c
-HICON handle = loadHandleImage(src, a, TRUE);
+HICON handle = loadHandleImage(buffer, width, height, TRUE);
 ```
 
 [`SetClassLongPtrA`](https://learn.microsoft.com/en-us/windows/win32/api/winuser/nf-winuser-setclasslongptra)
 
 ```c
-SetClassLongPtrA(window, GCLP_HICON, (LPARAM) handle);
+SetClassLongPtrA(hwnd, GCLP_HICON, (LPARAM) handle);
 ```
 
 [`DestroyIcon`](https://learn.microsoft.com/en-us/windows/win32/api/winuser/nf-winuser-destroyicon)
@@ -243,14 +243,14 @@ XcursorImageDestroy(native);
 ### win32
 
 ```c
-HCURSOR cursor = (HCURSOR) loadHandleImage(image, a, FALSE);
+HCURSOR cursor = (HCURSOR) loadHandleImage(image, width, height, FALSE);
 ```
 
 [`SetClassLongPtrA`](https://learn.microsoft.com/en-us/windows/win32/api/winuser/nf-winuser-setclasslongptra)
 [`SetCursor`](https://learn.microsoft.com/en-us/windows/win32/api/winuser/nf-winuser-setcursor)
 
 ```c
-SetClassLongPtrA(window, GCLP_HCURSOR, (LPARAM) cursor);
+SetClassLongPtrA(hwnd, GCLP_HCURSOR, (LPARAM) cursor);
 SetCursor(cursor);
 ```
 
@@ -337,14 +337,16 @@ char* icon = MAKEINTRESOURCEA(mouse);
 [`LoadCursorA`](https://learn.microsoft.com/en-us/windows/win32/api/winuser/nf-winuser-loadcursora)
 
 ```c
-SetClassLongPtrA(window, GCLP_HCURSOR, (LPARAM) LoadCursorA(NULL, icon));
+SetClassLongPtrA(hwnd, GCLP_HCURSOR, (LPARAM) LoadCursorA(NULL, icon));
 SetCursor(LoadCursorA(NULL, icon));
 ```
 
 ### cocoa
 
-```c
-void* mouse = NSCursor_arrowStr(mouseStr);
+for example [`arrowCursor`](https://developer.apple.com/documentation/appkit/nscursor/1527160-arrowcursor?changes=_1&language=objc)
+
+```c 
+void* mouse = objc_msgSend_id(objc_getClass("NSCursor"), sel_registerName("arrowCursor"));
 ```
 
 [`set`](https://developer.apple.com/documentation/appkit/nscursor/1526148-set)
