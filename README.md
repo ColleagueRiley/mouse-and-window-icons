@@ -16,17 +16,11 @@ unsigned long* target = X11Icon;
 unsigned int i;
 
 for (i = 0; i < width * height; i++) {
-    if (channels == 3)
-        *target++ = ((icon[i * 3 + 0]) << 16) |
-        ((icon[i * 3 + 1]) << 8) |
-        ((icon[i * 3 + 2]) << 0) |
-        (0xFF << 24);
-
-    else if (channels == 4)
-        *target++ = ((icon[i * 4 + 0]) << 16) |
-        ((icon[i * 4 + 1]) << 8) |
-        ((icon[i * 4 + 2]) << 0) |
-        ((icon[i * 4 + 3]) << 24);
+    // channels == 4 
+    *target++ = ((icon[i * 4 + 0]) << 16) |
+    ((icon[i * 4 + 1]) << 8) |
+    ((icon[i * 4 + 2]) << 0) |
+    ((icon[i * 4 + 3]) << 24);
 }
 ```
 
