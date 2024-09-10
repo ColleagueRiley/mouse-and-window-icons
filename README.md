@@ -49,15 +49,10 @@ XFlush((Display*) display);
 
 ```c
 HICON loadHandleImage(unsigned char* src, RGFW_area a, BOOL icon) {
-    unsigned int i;
-    HDC dc;
-    HICON handle;
-    HBITMAP color, mask;
-    BITMAPV5HEADER bi;
-    ICONINFO ii;
-    unsigned char* target = NULL;
-    unsigned char* source = src;
+``` 
 
+```c
+   BITMAPV5HEADER bi; 
     ZeroMemory(&bi, sizeof(bi));
     bi.bV5Size = sizeof(bi);
     bi.bV5Width = width;
@@ -72,8 +67,10 @@ HICON loadHandleImage(unsigned char* src, RGFW_area a, BOOL icon) {
 ```
 
 ```c
-    dc = GetDC(NULL);
-    color = CreateDIBSection(dc,
+    unsigned char* target = NULL;
+      
+    HDC dc = GetDC(NULL);
+    HBITMAP color = CreateDIBSection(dc,
         (BITMAPINFO*) &bi,
         DIB_RGB_COLORS,
         (void**) &target,
@@ -83,10 +80,12 @@ HICON loadHandleImage(unsigned char* src, RGFW_area a, BOOL icon) {
 ```
 
 ```c
-    mask = CreateBitmap(width, height, 1, 1, NULL);
+    HBITMAP mask = CreateBitmap(width, height, 1, 1, NULL);
 ```
 
 ```c
+    unsigned char* source = src; 
+    unsigned int i;
     for (i = 0; i < width * height; i++) {
         target[0] = source[2];
         target[1] = source[1];
@@ -98,6 +97,7 @@ HICON loadHandleImage(unsigned char* src, RGFW_area a, BOOL icon) {
 ```
 
 ```c
+    ICONINFO ii;
     ZeroMemory(&ii, sizeof(ii));
     ii.fIcon = icon;
     ii.xHotspot = 0;
@@ -107,7 +107,7 @@ HICON loadHandleImage(unsigned char* src, RGFW_area a, BOOL icon) {
 ```
 
 ```c
-    handle = CreateIconIndirect(&ii);
+    HICON handle = CreateIconIndirect(&ii);
 ```
 
 ```c
