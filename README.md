@@ -190,8 +190,6 @@ release(dock_image);
 release(representation);
 ```
 
-
-
 ## mouse icon image
 
 ### X11
@@ -259,18 +257,32 @@ DestroyCursor(cursor);
 ### cocoa
 
 Make a bitmap representation, then copy the loaded image into it.
+
+[`initWithBitmapData`](https://developer.apple.com/documentation/coreimage/ciimage/1437857-initwithbitmapdata)
+
+[`bitmapData`](https://developer.apple.com/documentation/appkit/nsbitmapimagerep/1395421-bitmapdata)
+
 ```c
 void* representation = NSBitmapImageRep_initWithBitmapData(NULL, width, height, 8, channels, (channels == 4), false, "NSCalibratedRGBColorSpace", 1 << 1, width * channels, 8 * channels);
 memcpy(NSBitmapImageRep_bitmapData(representation), image, width * height * channels);
 ```
 
 Add the representation.
+
+[`NSImage_init`](https://developer.apple.com/documentation/appkit/nsimage/1519860-init)
+
+[`addRepresentation`](https://developer.apple.com/documentation/appkit/nsimage/1519911-addrepresentation)
+
 ```c
 void* cursor_image = NSImage_initWithSize((NSSize){width, height});
 NSImage_addRepresentation(cursor_image, representation);
 ```
 
 Finally, set the cursor image.
+
+[`initWithImage`](https://developer.apple.com/documentation/uikit/uiimageview/1621062-initwithimage)
+
+[`set`](https://developer.apple.com/documentation/appkit/nscursor/1526148-set)
 
 ```c
 void* cursor = NSCursor_initWithImage(cursor_image, (NSPoint){0.0, 0.0});
