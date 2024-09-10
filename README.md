@@ -23,6 +23,10 @@ for (i = 0; i < width * height; i++) {
 }
 ```
 
+[`XInternAtom`](https://www.x.org/releases/X11R7.5/doc/man/man3/XInternAtom.3.html)
+
+[`XChangeProperty`](https://linux.die.net/man/3/xchangeproperty)
+
 ```c
 const Atom NET_WM_ICON = XInternAtom((Display*) display, "_NET_WM_ICON", False);
 
@@ -34,12 +38,85 @@ XChangeProperty((Display*) display, (Window) window,
     longCount);
 ```
 
+[`XFlush`](https://www.x.org/releases/X11R7.5/doc/man/man3/XSync.3.html)
+
 ```c
 free(X11Icon);
 XFlush((Display*) display);
 ```
 
 ### win32
+
+```c
+HICON loadHandleImage(unsigned char* src, RGFW_area a, BOOL icon) {
+    unsigned int i;
+    HDC dc;
+    HICON handle;
+    HBITMAP color, mask;
+    BITMAPV5HEADER bi;
+    ICONINFO ii;
+    unsigned char* target = NULL;
+    unsigned char* source = src;
+
+    ZeroMemory(&bi, sizeof(bi));
+    bi.bV5Size = sizeof(bi);
+    bi.bV5Width = width;
+    bi.bV5Height = -((LONG) height);
+    bi.bV5Planes = 1;
+    bi.bV5BitCount = 32;
+    bi.bV5Compression = BI_BITFIELDS;
+    bi.bV5RedMask = 0x00ff0000;
+    bi.bV5GreenMask = 0x0000ff00;
+    bi.bV5BlueMask = 0x000000ff;
+    bi.bV5AlphaMask = 0xff000000;
+```
+
+```c
+    dc = GetDC(NULL);
+    color = CreateDIBSection(dc,
+        (BITMAPINFO*) &bi,
+        DIB_RGB_COLORS,
+        (void**) &target,
+        NULL,
+        (DWORD) 0);
+    ReleaseDC(NULL, dc);
+```
+
+```c
+    mask = CreateBitmap(width, height, 1, 1, NULL);
+```
+
+```c
+    for (i = 0; i < width * height; i++) {
+        target[0] = source[2];
+        target[1] = source[1];
+        target[2] = source[0];
+        target[3] = source[3];
+        target += 4;
+        source += 4;
+    }
+```
+
+```c
+    ZeroMemory(&ii, sizeof(ii));
+    ii.fIcon = icon;
+    ii.xHotspot = 0;
+    ii.yHotspot = 0;
+    ii.hbmMask = mask;
+    ii.hbmColor = color;
+```
+
+```c
+    handle = CreateIconIndirect(&ii);
+```
+
+```c
+    DeleteObject(color);
+    DeleteObject(mask);
+
+    return handle;
+}
+```
 
 ```c
 HICON handle = loadHandleImage(src, a, TRUE);
@@ -118,77 +195,6 @@ XcursorImageDestroy(native);
 ```
 
 ### win32
-
-```c
-HICON loadHandleImage(unsigned char* src, RGFW_area a, BOOL icon) {
-    unsigned int i;
-    HDC dc;
-    HICON handle;
-    HBITMAP color, mask;
-    BITMAPV5HEADER bi;
-    ICONINFO ii;
-    unsigned char* target = NULL;
-    unsigned char* source = src;
-
-    ZeroMemory(&bi, sizeof(bi));
-    bi.bV5Size = sizeof(bi);
-    bi.bV5Width = width;
-    bi.bV5Height = -((LONG) height);
-    bi.bV5Planes = 1;
-    bi.bV5BitCount = 32;
-    bi.bV5Compression = BI_BITFIELDS;
-    bi.bV5RedMask = 0x00ff0000;
-    bi.bV5GreenMask = 0x0000ff00;
-    bi.bV5BlueMask = 0x000000ff;
-    bi.bV5AlphaMask = 0xff000000;
-```
-
-```c
-    dc = GetDC(NULL);
-    color = CreateDIBSection(dc,
-        (BITMAPINFO*) &bi,
-        DIB_RGB_COLORS,
-        (void**) &target,
-        NULL,
-        (DWORD) 0);
-    ReleaseDC(NULL, dc);
-```
-
-```c
-    mask = CreateBitmap(width, height, 1, 1, NULL);
-```
-
-```c
-    for (i = 0; i < width * height; i++) {
-        target[0] = source[2];
-        target[1] = source[1];
-        target[2] = source[0];
-        target[3] = source[3];
-        target += 4;
-        source += 4;
-    }
-```
-
-```c
-    ZeroMemory(&ii, sizeof(ii));
-    ii.fIcon = icon;
-    ii.xHotspot = 0;
-    ii.yHotspot = 0;
-    ii.hbmMask = mask;
-    ii.hbmColor = color;
-```
-
-```c
-    handle = CreateIconIndirect(&ii);
-```
-
-```c
-    DeleteObject(color);
-    DeleteObject(mask);
-
-    return handle;
-}
-```
 
 ```c
 HCURSOR cursor = (HCURSOR) loadHandleImage(image, a, FALSE);
