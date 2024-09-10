@@ -299,13 +299,20 @@ release(representation);
 
 ## standard mouse icons
 ### X11
+
+[`XCreateFontCursor`](https://www.x.org/releases/X11R7.5/doc/man/man3/XCreateFontCursor.3.html)
+
 ```c
 Cursor cursor = XCreateFontCursor((Display*) display, mouse);
 ```
 
+[`XDefineCursor`](https://www.x.org/releases/X11R7.5/doc/man/man3/XDefineCursor.3.html)
+
 ```c
 XDefineCursor((Display*) display, (Window) window, (Cursor) cursor);
 ```
+
+[`XFreeCursor`]()https://tronche.com/gui/x/xlib/pixmap-and-cursor/XFreeCursor.html
 
 ```c
 XFreeCursor((Display*) display, (Cursor) cursor);
