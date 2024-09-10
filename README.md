@@ -334,6 +334,7 @@ char* icon = MAKEINTRESOURCEA(mouse);
 
 [`SetClassLongPtrA`](https://learn.microsoft.com/en-us/windows/win32/api/winuser/nf-winuser-setclasslongptra)
 [`SetCursor`](https://learn.microsoft.com/en-us/windows/win32/api/winuser/nf-winuser-setcursor)
+[`LoadCursorA`](https://learn.microsoft.com/en-us/windows/win32/api/winuser/nf-winuser-loadcursora)
 
 ```c
 SetClassLongPtrA(window, GCLP_HCURSOR, (LPARAM) LoadCursorA(NULL, icon));
