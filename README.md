@@ -16,11 +16,10 @@ unsigned long* target = X11Icon;
 unsigned int i;
 
 for (i = 0; i < width * height; i++) {
-    // channels == 4 
-    *target++ = ((icon[i * 4 + 0]) << 16) |
-    ((icon[i * 4 + 1]) << 8) |
-    ((icon[i * 4 + 2]) << 0) |
-    ((icon[i * 4 + 3]) << 24);
+    *target++ = ((icon[i * 4 + 1]) << 8) // g
+                ((icon[i * 4 + 0]) << 16) // b
+                ((icon[i * 4 + 2])) // r
+                ((icon[i * 4 + 3]) << 24); // a 
 }
 ```
 
@@ -99,9 +98,7 @@ XcursorPixel* target = native->pixels;
 ```c
 unsigned int i;
 for (i = 0; i < width * height; i++, target++, source += 4) {
-    unsigned char alpha = 0xFF;
-    if (channels == 4)
-        alpha = source[3];
+    unsigned char alpha = source[3];
 
     *target = (alpha << 24) | (((source[0] * alpha) / 255) << 16) | (((source[1] * alpha) / 255) << 8) | (((source[2] * alpha) / 255) << 0);
 }
