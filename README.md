@@ -1,5 +1,11 @@
+# RGFW Under the Hood: Mouse and Window Icons
+## Introduction
+## Overview
+1) window icons
+2) mouse image icons
+3) default mouse icons
 
-## window icons 
+## window icons
 
 ### X11
 ```c
