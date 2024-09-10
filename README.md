@@ -320,9 +320,14 @@ XFreeCursor((Display*) display, (Cursor) cursor);
 
 ### win32
 
+[`MAKEINTRESOURCEA`](https://learn.microsoft.com/en-us/windows/win32/api/winuser/nf-winuser-makeintresourcea)
+
 ```c
 char* icon = MAKEINTRESOURCEA(mouse);
 ```
+
+[`SetClassLongPtrA`](https://learn.microsoft.com/en-us/windows/win32/api/winuser/nf-winuser-setclasslongptra)
+[`SetCursor`](https://learn.microsoft.com/en-us/windows/win32/api/winuser/nf-winuser-setcursor)
 
 ```c
 SetClassLongPtrA(window, GCLP_HCURSOR, (LPARAM) LoadCursorA(NULL, icon));
@@ -334,6 +339,8 @@ SetCursor(LoadCursorA(NULL, icon));
 ```c
 void* mouse = NSCursor_arrowStr(mouseStr);
 ```
+
+[`set`](https://developer.apple.com/documentation/appkit/nscursor/1526148-set)
 
 ```c
 objc_msgSend_void(mouse, sel_registerName("set"));
