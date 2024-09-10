@@ -51,8 +51,10 @@ XFlush((Display*) display);
 HICON loadHandleImage(unsigned char* src, RGFW_area a, BOOL icon) {
 ``` 
 
+[`BITMAPV5HEADER`](https://learn.microsoft.com/en-us/windows/win32/api/wingdi/ns-wingdi-bitmapv5header) stucture
+
 ```c
-   BITMAPV5HEADER bi; 
+    BITMAPV5HEADER bi; 
     ZeroMemory(&bi, sizeof(bi));
     bi.bV5Size = sizeof(bi);
     bi.bV5Width = width;
@@ -66,6 +68,12 @@ HICON loadHandleImage(unsigned char* src, RGFW_area a, BOOL icon) {
     bi.bV5AlphaMask = 0xff000000;
 ```
 
+[`GetDC`](https://learn.microsoft.com/en-us/windows/win32/api/winuser/nf-winuser-getdc)
+
+[`CreateDIBSection`](https://learn.microsoft.com/en-us/windows/win32/api/wingdi/nf-wingdi-createdibsection)
+
+[`ReleaseDC`](https://learn.microsoft.com/en-us/windows/win32/api/winuser/nf-winuser-releasedc)
+
 ```c
     unsigned char* target = NULL;
       
@@ -78,6 +86,8 @@ HICON loadHandleImage(unsigned char* src, RGFW_area a, BOOL icon) {
         (DWORD) 0);
     ReleaseDC(NULL, dc);
 ```
+
+[`CreateBitmap`](https://learn.microsoft.com/en-us/windows/win32/api/wingdi/nf-wingdi-createbitmap)
 
 ```c
     HBITMAP mask = CreateBitmap(width, height, 1, 1, NULL);
@@ -96,6 +106,8 @@ HICON loadHandleImage(unsigned char* src, RGFW_area a, BOOL icon) {
     }
 ```
 
+[`ICONINFO`](https://learn.microsoft.com/en-us/windows/win32/api/winuser/ns-winuser-iconinfo)
+
 ```c
     ICONINFO ii;
     ZeroMemory(&ii, sizeof(ii));
@@ -106,9 +118,13 @@ HICON loadHandleImage(unsigned char* src, RGFW_area a, BOOL icon) {
     ii.hbmColor = color;
 ```
 
+[`CreateIconIndirect`](https://learn.microsoft.com/en-us/windows/win32/api/winuser/nf-winuser-createiconindirect)
+
 ```c
     HICON handle = CreateIconIndirect(&ii);
 ```
+
+[`DeleteObject`](https://learn.microsoft.com/en-us/windows/win32/api/wingdi/nf-wingdi-deleteobject)
 
 ```c
     DeleteObject(color);
@@ -118,13 +134,19 @@ HICON loadHandleImage(unsigned char* src, RGFW_area a, BOOL icon) {
 }
 ```
 
+Now you can create a handle via the function we created. 
+
 ```c
 HICON handle = loadHandleImage(src, a, TRUE);
 ```
 
+[`SetClassLongPtrA`](https://learn.microsoft.com/en-us/windows/win32/api/winuser/nf-winuser-setclasslongptra)
+
 ```c
 SetClassLongPtrA(window, GCLP_HICON, (LPARAM) handle);
 ```
+
+[`DestroyIcon`](https://learn.microsoft.com/en-us/windows/win32/api/winuser/nf-winuser-destroyicon)
 
 ```c
 DestroyIcon(handle);
@@ -133,18 +155,30 @@ DestroyIcon(handle);
 ### cocoa
 
 Make a bitmap representation, then copy the loaded image into it.
+
+[`initWithBitmapData`](https://developer.apple.com/documentation/coreimage/ciimage/1437857-initwithbitmapdata)
+
+[`bitmapData`](https://developer.apple.com/documentation/appkit/nsbitmapimagerep/1395421-bitmapdata)
+
 ```c
 void* representation = NSBitmapImageRep_initWithBitmapData(NULL, width, height, 8, channels, (channels == 4), false, "NSCalibratedRGBColorSpace", 1 << 1, width * channels, 8 * channels);
 memcpy(NSBitmapImageRep_bitmapData(representation), data, width * height * channels);
 ```
 
 Add the representation.
+
+[NSImage_init](https://developer.apple.com/documentation/appkit/nsimage/1519860-init)
+
+[addRepresentation](https://developer.apple.com/documentation/appkit/nsimage/1519911-addrepresentation)
+
 ```c
 void* dock_image = NSImage_initWithSize((NSSize){width, height});
 NSImage_addRepresentation(dock_image, (void*) representation);
 ```
 
 Finally, set the dock image to it.
+
+[setApplicationIconImage](https://developer.apple.com/documentation/appkit/nsapplication/1428744-applicationiconimage)
 
 ```c
 objc_msgSend_void_id(NSApp, sel_registerName("setApplicationIconImage:"), dock_image);
