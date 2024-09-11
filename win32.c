@@ -68,7 +68,7 @@ int main() {
 	
 	RegisterClass(&wc);
 	
-	HWND hwnd = CreateWindowA(wc.lpszClassName, "Sample Window", 0,
+	HWND hwnd = CreateWindowA(wc.lpszClassName, "Sample Window", WS_CAPTION | WS_SYSMENU | WS_BORDER | WS_MINIMIZEBOX,
 			500, 500, 500, 500,
 			NULL, NULL, wc.hInstance, NULL);
 
