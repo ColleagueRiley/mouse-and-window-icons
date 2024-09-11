@@ -1,6 +1,6 @@
 # RGFW Under the Hood: Mouse and Window Icons
 ## Introduction
-Changing the mouse and window icons can be annoying with low-level APIs. That's because you must load data structures specific to the API and load the bitmap using a format the API supports. It can also be unclear which functions must be used to update the icon. This tutorial aims to streamline the process and explain how loading mouse and window icons can be done. 
+Changing the mouse and window icons can be annoying with low-level APIs. That's because you must load data structures specific to the API and load the bitmap using a format the API supports. It can also be unclear which functions must be used to update the icon. This tutorial aims to streamline the process and explain how to load mouse and window icons. 
 
 This tutorial is based on my experience in making RGFW and its source code. The repository can be found [here](htttps://github.com/ColleagueRiley/RGFW) if you would like to reference it.
 
@@ -12,8 +12,7 @@ This tutorial is based on my experience in making RGFW and its source code. The 
 ## Window icons
 
 ### X11
-First, allocate an array to send it to X11. 
-
+First, allocate the array to be sent to X11. 
 The RGB icon must be converted to match X11's BGR format.
 
 The format will be in ints, which should be 32 bits on Linux. 
@@ -60,7 +59,7 @@ XChangeProperty((Display*) display, (Window) window,
     longCount);
 ```
 
-Make sure to use [`XFlush`](https://www.x.org/releases/X11R7.5/doc/man/man3/XSync.3.html) to update the X11 server on the change.
+Use [`XFlush`](https://www.x.org/releases/X11R7.5/doc/man/man3/XSync.3.html) to update the X11 server on the change.
 
 ```c
 free(X11Icon);
@@ -150,7 +149,7 @@ Then we'll create the icon handle with [`CreateIconIndirect`](https://learn.micr
     HICON handle = CreateIconIndirect(&ii);
 ```
 
-Finally, we can free the object color, mask data, and return the icon handle.
+Finally, we can free the object color and mask data and return the icon handle.
 
 [`DeleteObject`](https://learn.microsoft.com/en-us/windows/win32/api/wingdi/nf-wingdi-deleteobject)
 
@@ -257,7 +256,7 @@ Next, we'll create a cursor with the cursor image using [`XcursorImageLoadCursor
 Cursor cursor = XcursorImageLoadCursor((Display*) display, native);
 ```
 
-Then [`XDefineCursor`](https://www.x.org/releases/X11R7.5/doc/man/man3/XDefineCursor.3.html) can be used to set the new cursor.
+Then [`XDefineCursor`](https://www.x.org/releases/X11R7.5/doc/man/man3/XDefineCursor.3.html) sets the new cursor.
 
 ```c
 XDefineCursor((Display*) display, (Window) window, (Cursor) cursor);
@@ -272,7 +271,7 @@ XcursorImageDestroy(native);
 
 ### win32
 
-We'll use the function I defined earlier for creating a cursor icon handle. 
+We'll use the function I defined earlier to create a cursor icon handle. 
 
 ```c
 HCURSOR cursor = (HCURSOR) loadHandleImage(image, width, height, FALSE);
@@ -285,7 +284,7 @@ SetClassLongPtrA(hwnd, GCLP_HCURSOR, (LPARAM) cursor);
 SetCursor(cursor);
 ```
 
-Make sure to free the cursor via [`DestroyCursor`](https://learn.microsoft.com/en-us/windows/win32/api/winuser/nf-winuser-destroycursor).
+Free the cursor via [`DestroyCursor`](https://learn.microsoft.com/en-us/windows/win32/api/winuser/nf-winuser-destroycursor).
 
 ```c
 DestroyCursor(cursor);
@@ -349,7 +348,7 @@ Then you can update the cursor with [`XDefineCursor`](https://www.x.org/releases
 XDefineCursor((Display*) display, (Window) window, (Cursor) cursor);
 ```
 
-Make sure to free the cursor data with [`XFreeCursor`](https://tronche.com/gui/x/xlib/pixmap-and-cursor/XFreeCursor.html).
+Free the cursor data with [`XFreeCursor`](https://tronche.com/gui/x/xlib/pixmap-and-cursor/XFreeCursor.html).
 
 ```c
 XFreeCursor((Display*) display, (Cursor) cursor);
