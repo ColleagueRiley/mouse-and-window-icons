@@ -12,8 +12,7 @@ This tutorial is based on my experience in making RGFW and its source code. The 
 ## Window icons
 
 ### X11
-First, allocate the array to be sent to X11. 
-The RGB icon must be converted to match X11's BGR format.
+First, allocate the array to be sent to X11, it will hold our icon data, converted for X11's BGR format. 
 
 The format will be in ints, which should be 32 bits on Linux. 
 The first two elements will be used for the size. So the array length will be the width * height + 2.
