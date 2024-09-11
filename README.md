@@ -1,6 +1,6 @@
 # RGFW Under the Hood: Mouse and Window Icons
 ## Introduction
-Changing the mouse and window icons can be annoying with low-level APIs. That's because you must load data structures specific to the API and load the bitmap using a format the API supports. It can also be unclear which functions must be used update the icon. This tutorial aims to streamline the process and explain how loading mouse and window icons can be done. 
+Changing the mouse and window icons can be annoying with low-level APIs. That's because you must load data structures specific to the API and load the bitmap using a format the API supports. It can also be unclear which functions must be used to update the icon. This tutorial aims to streamline the process and explain how loading mouse and window icons can be done. 
 
 This tutorial is based on my experience in making RGFW and its source code. The repository can be found [here](htttps://github.com/ColleagueRiley/RGFW) if you would like to reference it.
 
@@ -374,7 +374,7 @@ SetCursor(LoadCursorA(NULL, icon));
 
 ### cocoa
 
-First, find the cursor object you want to use.
+First, find the cursor object you would like to use.
 
 For example, [`arrowCursor`](https://developer.apple.com/documentation/appkit/nscursor/1527160-arrowcursor?changes=_1&language=objc)
 
