@@ -8,7 +8,7 @@
 ## Window icons
 
 ### X11
-First, allocate an array to send to X11. Our RGB icon must be converted to match X11's BGR format.
+First, allocate an array to send it to X11. The RGB icon must be converted to match X11's BGR format.
 
 The format will be in ints, which should be 32 bits on Linux. 
 The first two elements will be used for the size. So the array length will be the width * height + 2.  
@@ -69,7 +69,7 @@ I'll start by creating a `loadHandleImage` function. This function will be used 
 HICON loadHandleImage(unsigned char* src, unsigned int width, unsigned int height, BOOL icon) {
 ``` 
 
-We'll start by creating a [`BITMAPV5HEADER`](https://learn.microsoft.com/en-us/windows/win32/api/wingdi/ns-wingdi-bitmapv5header) stucture with the proper format to match how our data is stored.
+We'll start by creating a [`BITMAPV5HEADER`](https://learn.microsoft.com/en-us/windows/win32/api/wingdi/ns-wingdi-bitmapv5header) structure with the proper format to match how our data is stored.
 
 ```c
     BITMAPV5HEADER bi; 
@@ -86,7 +86,7 @@ We'll start by creating a [`BITMAPV5HEADER`](https://learn.microsoft.com/en-us/w
     bi.bV5AlphaMask = 0xff000000;
 ```
 
-Next we'll create color section for the icon.
+Next, we'll create a color section for the icon.
 
 First get the Drawing Context with [`GetDC`](https://learn.microsoft.com/en-us/windows/win32/api/winuser/nf-winuser-getdc), next create the section with  [`CreateDIBSection`](https://learn.microsoft.com/en-us/windows/win32/api/wingdi/nf-wingdi-createdibsection).
 
@@ -126,7 +126,7 @@ Now we'll load our image data into the bitmap.
     }
 ```
 
-Now we can crete a [`ICONINFO`](https://learn.microsoft.com/en-us/windows/win32/api/winuser/ns-winuser-iconinfo) structure for updating the window icon.
+Now we can create a [`ICONINFO`](https://learn.microsoft.com/en-us/windows/win32/api/winuser/ns-winuser-iconinfo) structure for updating the window icon.
 
 ```c
     ICONINFO ii;
@@ -144,7 +144,7 @@ Then we'll create the icon handle with [`CreateIconIndirect`](https://learn.micr
     HICON handle = CreateIconIndirect(&ii);
 ```
 
-Finally we can free the object color, mask data and return the icon handle.
+Finally, we can free the object color, mask data, and return the icon handle.
 
 [`DeleteObject`](https://learn.microsoft.com/en-us/windows/win32/api/wingdi/nf-wingdi-deleteobject)
 
