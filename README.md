@@ -24,7 +24,7 @@ unsigned long* target = X11Icon;
 ```
 
 
-Now we can convert the icon to X11's format. This means manually casting the icon array into a 32 bit int in the BGRA format.
+Now we can convert the icon to X11's format. This means manually casting the icon array into a 32-bit int in the BGRA format.
 
 ```c
 unsigned int i;
@@ -158,7 +158,7 @@ Finally we can free the object color, mask data and return the icon handle.
 
 #### part 2
 
-Now we can use our function to create a icon handle  
+Now we can use our function to create an icon handle  
 
 ```c
 HICON handle = loadHandleImage(buffer, width, height, TRUE);
@@ -192,7 +192,7 @@ void* representation = ((id(*)(id, SEL, unsigned char**, NSInteger, NSInteger, N
         (NSAlloc((id)objc_getClass("NSBitmapImageRep")), func, NULL, width, height, 8, 4, true, false, NSCalibratedRGBColorSpace, 1 << 1, width * channels, 8 * channels);
 ```
 
-Next create the image with the matching size via [`NSImage_init`](https://developer.apple.com/documentation/appkit/nsimage/1519860-init) and add the representation using [`addRepresentation`](https://developer.apple.com/documentation/appkit/nsimage/1519911-addrepresentation).
+Next, create the image with the matching size via [`NSImage_init`](https://developer.apple.com/documentation/appkit/nsimage/1519860-init) and add the representation using [`addRepresentation`](https://developer.apple.com/documentation/appkit/nsimage/1519911-addrepresentation).
 
 ```c
 void* dock_image = ((id(*)(id, SEL, NSSize))objc_msgSend)
@@ -206,7 +206,7 @@ Finally, set the dock image to it using [`setApplicationIconImage`](https://deve
 objc_msgSend_void_id(NSApp, sel_registerName("setApplicationIconImage:"), dock_image);
 ```
 
-Free the garbage.
+Free the leftover data with `NSRelease`.
 ```c
 NSRelease(dock_image);
 NSRelease(representation);
@@ -215,23 +215,23 @@ NSRelease(representation);
 ## mouse icon image
 
 ### X11
-First creaate an X11 cursor image using [`XcursorImageCreate`](https://linux.die.net/man/3/xcursorimagecreate).
+First, create an X11 cursor image using [`XcursorImageCreate`](https://linux.die.net/man/3/xcursorimagecreate).
 ```c
 XcursorImage* native = XcursorImageCreate(width, height);
 native->xhot = 0;
 native->yhot = 0;
 ```
 
-Then'll we'll make ap ointer to the pixel data and a pointer to the XCursor image's pointer data.
+Then we'll make a pointer to the pixel data and a pointer to the XCursor image's pointer data.
 
 ```c
 unsigned char* source = (unsigned char*) image;
 XcursorPixel* target = native->pixels;
 ```
 
-Nowe we can convert the pixel data to the X11 format.
+Now we can convert the pixel data to the X11 format.
 
-The X11 format uses BGRA with ints, we we must reorganize the array, apply the opacity and cast the data type manually.
+The X11 format uses BGRA with ints, we must reorganize the array, apply the opacity, and cast the data type manually.
 
 ```c
 unsigned int i;
@@ -245,7 +245,7 @@ for (i = 0; i < width * height; i++, target++, source += 4) {
 }
 ```
 
-Next we'll create a cursor with the cursor image using [`XcursorImageLoadCursor`](https://man.archlinux.org/man/XcursorImageLoadCursor.3.en).
+Next, we'll create a cursor with the cursor image using [`XcursorImageLoadCursor`](https://man.archlinux.org/man/XcursorImageLoadCursor.3.en).
 
 ```c
 Cursor cursor = XcursorImageLoadCursor((Display*) display, native);
@@ -257,7 +257,7 @@ Then [`XDefineCursor`](https://www.x.org/releases/X11R7.5/doc/man/man3/XDefineCu
 XDefineCursor((Display*) display, (Window) window, (Cursor) cursor);
 ```
 
-Finally we can free the cursor and cursor image with [`XFreeCursor`](https://linux.die.net/man/3/xfreecursor) and [`XcursorImageDestroy`](https://linux.die.net/man/3/xcursorimagedestroy).
+Finally, we can free the cursor and cursor image with [`XFreeCursor`](https://linux.die.net/man/3/xfreecursor) and [`XcursorImageDestroy`](https://linux.die.net/man/3/xcursorimagedestroy).
 
 ```c
 XFreeCursor((Display*) display, (Cursor) cursor);
@@ -287,11 +287,7 @@ DestroyCursor(cursor);
 
 ### cocoa
 
-Make a bitmap representation, then copy the loaded image into it.
-
-[`initWithBitmapData`](https://developer.apple.com/documentation/coreimage/ciimage/1437857-initwithbitmapdata)
-
-[`bitmapData`](https://developer.apple.com/documentation/appkit/nsbitmapimagerep/1395421-bitmapdata)
+Make a bitmap representation with initWithBitmapData then copy the icon data to it using bitmapData.
 
 ```c
 representation = ((id(*)(id, SEL, unsigned char**, NSInteger, NSInteger, NSInteger, NSInteger, bool, bool, const char*, NSBitmapFormat, NSInteger, NSInteger))objc_msgSend)
@@ -302,11 +298,8 @@ representation = ((id(*)(id, SEL, unsigned char**, NSInteger, NSInteger, NSInteg
 			icon, width * height * channels);
 ```
 
-Add the representation.
-
-[`NSImage_init`](https://developer.apple.com/documentation/appkit/nsimage/1519860-init)
-
-[`addRepresentation`](https://developer.apple.com/documentation/appkit/nsimage/1519911-addrepresentation)
+Next, create the image with the matching size via [`NSImage_init`](https://developer.apple.com/documentation/appkit/nsimage/1519860-init) and 
+Add the representation with [`addRepresentation`](https://developer.apple.com/documentation/appkit/nsimage/1519911-addrepresentation).
 
 ```c
 void* cursor_image = ((id(*)(id, SEL, NSSize))objc_msgSend)
@@ -316,7 +309,7 @@ void* cursor_image = ((id(*)(id, SEL, NSSize))objc_msgSend)
 
 ```
 
-Finally create the cursor icon using  [`initWithImage`](https://developer.apple.com/documentation/uikit/uiimageview/1621062-initwithimage) and set the cursor using [`set`](https://developer.apple.com/documentation/appkit/nscursor/1526148-set).
+Finally, create the cursor icon using  [`initWithImage`](https://developer.apple.com/documentation/uikit/uiimageview/1621062-initwithimage) and set the cursor using [`set`](https://developer.apple.com/documentation/appkit/nscursor/1526148-set).
 
 ```c
 void* cursor = ((id(*)(id, SEL, id, NSPoint))objc_msgSend)
@@ -326,7 +319,7 @@ void* cursor = ((id(*)(id, SEL, id, NSPoint))objc_msgSend)
 objc_msgSend_void(cursor, sel_registerName("set"));
 ```
 
-Make sure to free the garbage.
+Make sure to free the list over data with `NSRelease`
 
 ```c
 NSRelease(cursor_image);
@@ -336,7 +329,7 @@ NSRelease(representation);
 ## standard mouse icons
 ### X11
 
-Fisrt create a cursor for the standard cursor you want to use with [`XCreateFontCursor`](https://www.x.org/releases/X11R7.5/doc/man/man3/XCreateFontCursor.3.html).
+First, create a cursor for the standard cursor you want to use with [`XCreateFontCursor`](https://www.x.org/releases/X11R7.5/doc/man/man3/XCreateFontCursor.3.html).
 
 Change `mouse` to be an actual cursor macro (they can be found in `/usr/include/X11/cursorfont.h`)
 
@@ -358,7 +351,7 @@ XFreeCursor((Display*) display, (Cursor) cursor);
 
 ### win32
 
-Fisrt create a cursor for the standard cursor you want to use with [`MAKEINTRESOURCEA`](https://learn.microsoft.com/en-us/windows/win32/api/winuser/nf-winuser-makeintresourcea)
+First, create a cursor for the standard cursor you want to use with [`MAKEINTRESOURCEA`](https://learn.microsoft.com/en-us/windows/win32/api/winuser/nf-winuser-makeintresourcea)
 
 ```c
 char* icon = MAKEINTRESOURCEA(mouse);
@@ -377,7 +370,7 @@ SetCursor(LoadCursorA(NULL, icon));
 
 First, find the cursor object you want to use.
 
-For example [`arrowCursor`](https://developer.apple.com/documentation/appkit/nscursor/1527160-arrowcursor?changes=_1&language=objc)
+For example, [`arrowCursor`](https://developer.apple.com/documentation/appkit/nscursor/1527160-arrowcursor?changes=_1&language=objc)
 
 ```c 
 void* mouse = objc_msgSend_id(objc_getClass("NSCursor"), sel_registerName("arrowCursor"));
