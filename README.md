@@ -8,7 +8,9 @@
 ## Window icons
 
 ### X11
-First, allocate an array to send it to X11. The RGB icon must be converted to match X11's BGR format.
+First, allocate an array to send it to X11. 
+
+The RGB icon must be converted to match X11's BGR format.
 
 The format will be in ints, which should be 32 bits on Linux. 
 The first two elements will be used for the size. So the array length will be the width * height + 2.  
