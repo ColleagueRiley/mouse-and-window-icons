@@ -8,9 +8,9 @@
 ## Window icons
 
 ### X11
-First, allocate an array to send to X11. This is because our RGB icon must be converted to match X11's BGR format.
+First, allocate an array to send to X11. Our RGB icon must be converted to match X11's BGR format.
 
-The format will be in ints, which should be 32 bits on linux. 
+The format will be in ints, which should be 32 bits on Linux. 
 The first two elements will be used for the size. So the array length will be the width * height + 2.  
 
 ```c
@@ -37,7 +37,7 @@ for (i = 0; i < width * height; i++) {
 }
 ```
 
-Next we'll need to load an X11 atom with  [`XInternAtom`](https://www.x.org/releases/X11R7.5/doc/man/man3/XInternAtom.3.html).
+Next, we'll need to load an X11 atom with  [`XInternAtom`](https://www.x.org/releases/X11R7.5/doc/man/man3/XInternAtom.3.html).
 
 We're loading the `NET_WM_ICON` atom, this atom is used for the Window's Window Manager icon property. 
 
