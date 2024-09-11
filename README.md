@@ -1,5 +1,9 @@
 # RGFW Under the Hood: Mouse and Window Icons
 ## Introduction
+Changing the mouse and window icons can be annoying with low-level APIs. That's because you must load data structures specific to the API and load the bitmap using a format the API supports. It can also be unclear which functions must be used update the icon. This tutorial aims to streamline the process and explain how loading mouse and window icons can be done. 
+
+This tutorial is based on my experience in making RGFW and its source code. The repository can be found [here](htttps://github.com/ColleagueRiley/RGFW) if you would like to reference it.
+
 ## Overview
 1) window icons
 2) mouse image icons
@@ -13,7 +17,7 @@ First, allocate an array to send it to X11.
 The RGB icon must be converted to match X11's BGR format.
 
 The format will be in ints, which should be 32 bits on Linux. 
-The first two elements will be used for the size. So the array length will be the width * height + 2.  
+The first two elements will be used for the size. So the array length will be the width * height + 2.
 
 ```c
 int longCount = 2 + width * height;
