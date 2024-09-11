@@ -42,9 +42,7 @@ for (i = 0; i < width * height; i++) {
 }
 ```
 
-Next, we'll need to load an X11 atom with  [`XInternAtom`](https://www.x.org/releases/X11R7.5/doc/man/man3/XInternAtom.3.html).
-
-We're loading the `NET_WM_ICON` atom, this atom is used for the Window's Window Manager icon property. 
+Next, we'll load the X11 atom, `NET_WM_ICON`, using [`XInternAtom`](https://www.x.org/releases/X11R7.5/doc/man/man3/XInternAtom.3.html). This atom is used for the Window's Window Manager icon property. 
 
 Then we'll use the [`XChangeProperty`](https://linux.die.net/man/3/xchangeproperty) function to change the icon property to the icon data.
 
