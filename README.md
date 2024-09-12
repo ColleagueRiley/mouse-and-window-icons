@@ -2,7 +2,7 @@
 ## Introduction
 Changing the mouse and window icons can be annoying with low-level APIs. That's because you must load data structures specific to the API and load the bitmap using a format the API supports. It can also be unclear which functions must be used to update the icon. This tutorial aims to streamline the process and explain how to load mouse and window icons. 
 
-This tutorial is based on my experience in making RGFW and its source code. The repository can be found [here](htttps://github.com/ColleagueRiley/RGFW), if you would like to reference it.
+This tutorial is based on my experience in making RGFW and its source code. The repository can be found [here](https://github.com/ColleagueRiley/RGFW), if you would like to reference it.
 
 ## Overview
 1) window icons
