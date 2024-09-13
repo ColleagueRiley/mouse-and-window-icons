@@ -321,7 +321,7 @@ void* cursor = ((id(*)(id, SEL, id, NSPoint))objc_msgSend)
 objc_msgSend_void(cursor, sel_registerName("set"));
 ```
 
-Make sure to free the list over data with `NSRelease`
+Make sure to free the leftover data with `NSRelease`
 
 ```c
 NSRelease(cursor_image);
